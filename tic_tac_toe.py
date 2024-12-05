@@ -41,7 +41,7 @@ def turn(first):
         print("This place is not free, try again")
         turn(first)
 
-def check_winning(first_start,):
+def check_winning(first_start,game_draw):
     for i in range(len(borad)):
         if borad[i][0] == borad[i][1] == borad[i][2] and borad[i][2] != " ":
             print(f"You won {first_start}")
@@ -56,15 +56,20 @@ def check_winning(first_start,):
     if borad[2][0] == borad[1][1] == borad[0][2] and borad[0][2] != " ":
         print(f"You won {first_start}") 
         return True
+    if game_draw == 8:
+        print("It is a draw")
+        return True
     return False
         
 def game():
     create_borad()
     winning = False
+    game_draw = 0
     first_start = game_turn[randint(0,1)]
     while not winning:
         turn(first_start)
-        winning = check_winning(first_start)
+        winning = check_winning(first_start,game_draw)
+        game_draw += 1
 
         if first_start == "X":
             first_start = "O"
