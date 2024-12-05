@@ -1,5 +1,5 @@
 #Tic_Tac_Toe_Game
-#Player vs Player
+#Player vs PC
 
 from random import randint
 
@@ -10,15 +10,31 @@ board = [
         [" "," "," "]
 ]
 
+winning_combinations = [
+    [(0, 0), (0, 1), (0, 2)],
+    [(1, 0), (1, 1), (1, 2)],
+    [(2, 0), (2, 1), (2, 2)],
+
+    [(0, 0), (1, 0), (2, 0)],
+    [(0, 1), (1, 1), (2, 1)],
+    [(0, 2), (1, 2), (2, 2)],
+
+    [(0, 0), (1, 1), (2, 2)],
+    [(0, 2), (1, 1), (2, 0)],
+]
+
+
 #Player symbols 
-game_turn =["X" , "O"]
+# game_turn =["X" , "O"]
 
 #Number of rows and columns
 row_column_index =["0" ,"1", "2"]
 
+
+print("\nTic_Tac_Toe_Game:\n")
+
 #Printing the borad with the X & O
 def print_board():
-    print("\nTic_Tac_Toe_Game:\n")
 
     #Creating the board.
     for index,row in enumerate(board):
@@ -75,6 +91,68 @@ def check_winner(player,count_turns):
         return True
     return False
 
+
+def pc_turn(player):
+
+    #winning
+    winning_pc = False
+    one_time = True
+    for combination in winning_combinations:
+        count_o = 0
+        count_space = 0
+        winning_index = []
+        for symbol in combination:
+            if board[symbol[0]][symbol[1]] == "O":
+                count_o +=1
+            if board[symbol[0]][symbol[1]] == " ":
+                winning_index = symbol
+                count_space +=1
+        if count_o == 2 and count_space == 1 and one_time:
+            board[winning_index[0]][winning_index[1]] = f"{player}"
+            one_time = False
+            winning_pc = True
+            print(f"\nPc played:")
+            print_board()
+
+
+    #Blocking      
+    blocking = False
+    if not winning_pc:
+        one_time = True
+        for combination in winning_combinations:
+            count_x = 0
+            count_space = 0
+            winning_index = []
+            for symbol in combination:
+                if board[symbol[0]][symbol[1]] == "X":
+                    count_x +=1
+                if board[symbol[0]][symbol[1]] == " ":
+                    winning_index = symbol
+                    count_space +=1
+            if count_x == 2 and count_space == 1 and one_time:
+                board[winning_index[0]][winning_index[1]] = f"{player}"
+                blocking = True
+                one_time = False
+                print(f"\nPc played:")
+                print_board()
+
+    #run this only when not winning or blocking
+    valid_move =False
+    while not valid_move and winning_pc == False and blocking == False:
+
+
+        row = randint(0,2)           
+        column = randint(0,2)
+        #Checks if the cell is free
+        if board[int(row)][int(column)] != " ":
+            pass
+        else:
+            #Add the symbol of the player to the board
+            board[int(row)][int(column)] = f"{player}"
+            valid_move = True
+            print(f"\nPc played:")
+            print_board()
+
 #Main func 
 def start_game():
 
@@ -86,23 +164,29 @@ def start_game():
     #Couning moves
     count_turns = 1
     #Random player start
-    current_player = game_turn[randint(0,1)]
+    current_player = "X"
     #While until win or draw
     while not winning:
-        #Player turn
-        player_turn(current_player)
+
+        #Checks hows turn is 
+        if count_turns % 2 == 1:
+            #Player turn
+            player_turn(current_player)
+        else:
+            #pc_turn
+            pc_turn(current_player)
 
         #Checks if we have a winner
         if count_turns >= 5:
             winning = check_winner(current_player,count_turns)
-            
         #move ++
         count_turns += 1
 
-        #Changing player turn
+        #Changing symbol 
         if current_player == "X":
             current_player = "O"
         else:
             current_player = "X"
+
 
 start_game()
