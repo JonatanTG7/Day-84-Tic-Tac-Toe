@@ -1,83 +1,81 @@
 #Tic_Tac_Toe_Game
 #Player vs Player
 
-#borad matrix 3x3
 from random import randint
 
-
-borad = [
+#board matrix 3x3
+board = [
         [" "," "," "],
         [" "," "," "],
         [" "," "," "]
 ]
 
+#Player symbols 
 game_turn =["X" , "O"]
 
+#Number of rows and columns
 row_column_index =["0" ,"1", "2"]
 
-def create_borad():
-    print("Tic_Tac_Toe_Game:\n\n")
+#
+def print_board():
+    print("\nTic_Tac_Toe_Game:\n")
 
     #Creating the board
-    for index,row in enumerate(borad):
+    for index,row in enumerate(board):
         print("  |".join(row))
         if index != 2:
             print("-----------")
      
-def turn(first):
-    print(f"{first} Turn:")
-    row = input("enter a row (0,1,2): ")
-    column = input("enter a column (0,1,2): ")
-    if row not in row_column_index:
-        print(f"You enter a wrong row: {row}. enter 0, 1 or 2")
-        turn(first)
-    elif column not in row_column_index:
-        print(f"You enter a wrong column: {column}. enter 0, 1 or 2")
-        turn(first)
-    elif borad[int(row)][int(column)] == " ":
-        borad[int(row)][int(column)] = f"{first}"
-        create_borad()
-    else:
-        print("This place is not free, try again")
-        turn(first)
+def player_turn(player):
+    valid_move =False
+    while not valid_move:
+        print(f"\nTurn of {player} :")
+        row = input("Please enter a row between 0-2: ")
+        column = input("Please enter a column between 0-2: ")
+        if row not in row_column_index:
+            print(f"You entered {row} and this is wrong. enter 0, 1 or 2")
+        elif column not in row_column_index:
+            print(f"You entered {column} and this is wrong. enter 0, 1 or 2")
+        elif board[int(row)][int(column)] != " ":
+            print("The row and column you enter is not free, try a diffrent place ")
+        else:
+            board[int(row)][int(column)] = f"{player}"
+            print_board()
+            valid_move = True
+            
 
-def check_winning(first_start,game_draw):
-    for i in range(len(borad)):
-        if borad[i][0] == borad[i][1] == borad[i][2] and borad[i][2] != " ":
-            print(f"You won {first_start}")
-            return True
-    for j in range(len(borad[0])):
-        if borad[0][j] == borad[1][j] == borad[2][j] and borad[2][j] != " ":
-            print(f"You won {first_start}")
-            return True
-    if borad[0][0] == borad[1][1] == borad[2][2] and borad[2][2] != " ":
-        print(f"You won {first_start}")
-        return True
-    if borad[2][0] == borad[1][1] == borad[0][2] and borad[0][2] != " ":
-        print(f"You won {first_start}") 
+def check_winner(player,game_draw):
+    print_message = False
+    for i in range(len(board)):
+        if board[i][0] == board[i][1] == board[i][2] and board[i][2] != " ":
+            print_message = True
+    for j in range(len(board[0])):
+        if board[0][j] == board[1][j] == board[2][j] and board[2][j] != " ":
+            print_message = True
+    if board[0][0] == board[1][1] == board[2][2] and board[2][2] != " ":
+            print_message = True
+    if board[2][0] == board[1][1] == board[0][2] and board[0][2] != " ":
+            print_message = True
+    if print_message:
+        print(f"The player {player} won! ")
         return True
     if game_draw == 8:
-        print("It is a draw")
+        print("It is a draw :)")
         return True
     return False
         
 def game():
-    create_borad()
+    print_board()
     winning = False
     game_draw = 0
-    first_start = game_turn[randint(0,1)]
+    current_player = game_turn[randint(0,1)]
     while not winning:
-        turn(first_start)
-        winning = check_winning(first_start,game_draw)
+        player_turn(current_player)
+        winning = check_winner(current_player,game_draw)
         game_draw += 1
-
-        if first_start == "X":
-            first_start = "O"
+        if current_player == "X":
+            current_player = "O"
         else:
-            first_start = "X"
-        
-
-
-    
+            current_player = "X"
 
 game()
