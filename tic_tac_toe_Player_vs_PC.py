@@ -35,18 +35,18 @@ print("\nTic_Tac_Toe_Game:\n")
 
 #Printing the borad with the X & O
 def print_board():
-
     #Creating the board.
     for index,row in enumerate(board):
         print("  |".join(row))
         if index != 2:
             print("-----------")
+    print("\n")
 
 #Checking if the row and column that the user is entering is correct and free.
 def player_turn(player):
     valid_move =False
     while not valid_move:
-        print(f"\nTurn of {player} :")
+        print(f"Your Turn {player}:")
 
         #Input from user
         row = input("Please enter a row between 0-2: ")
@@ -82,7 +82,10 @@ def check_winner(player,count_turns):
 
     #Checks if I won
     if is_winner:
-        print(f"The player {player} won! ")
+        if player == "X":
+            print(f"Godd job, you won against the pc")
+        else:
+            print("PC WIN ;)")
         return True
     
     #Checks if draw after 9 moves
@@ -101,6 +104,7 @@ def pc_turn(player):
         count_o = 0
         count_space = 0
         winning_index = []
+        
         for symbol in combination:
             if board[symbol[0]][symbol[1]] == "O":
                 count_o +=1
@@ -111,18 +115,19 @@ def pc_turn(player):
             board[winning_index[0]][winning_index[1]] = f"{player}"
             one_time = False
             winning_pc = True
-            print(f"\nPc played:")
+            print(f"PC played:")
             print_board()
 
 
     #Blocking      
-    blocking = False
     if not winning_pc:
+        blocking = False
         one_time = True
         for combination in winning_combinations:
             count_x = 0
             count_space = 0
             winning_index = []
+
             for symbol in combination:
                 if board[symbol[0]][symbol[1]] == "X":
                     count_x +=1
@@ -133,25 +138,24 @@ def pc_turn(player):
                 board[winning_index[0]][winning_index[1]] = f"{player}"
                 blocking = True
                 one_time = False
-                print(f"\nPc played:")
+                print(f"Pc played:")
                 print_board()
 
     #run this only when not winning or blocking
-    valid_move =False
-    while not valid_move and winning_pc == False and blocking == False:
-
-
-        row = randint(0,2)           
-        column = randint(0,2)
-        #Checks if the cell is free
-        if board[int(row)][int(column)] != " ":
-            pass
-        else:
-            #Add the symbol of the player to the board
-            board[int(row)][int(column)] = f"{player}"
-            valid_move = True
-            print(f"\nPc played:")
-            print_board()
+    if not winning_pc and not blocking:
+        valid_move =False
+        while not valid_move:
+            row = randint(0,2)           
+            column = randint(0,2)
+            #Checks if the cell is free
+            if board[int(row)][int(column)] != " ":
+                pass
+            else:
+                #Add the symbol of the player to the board
+                board[int(row)][int(column)] = f"{player}"
+                valid_move = True
+                print(f"Pc played:")
+                print_board()
 
 #Main func 
 def start_game():
